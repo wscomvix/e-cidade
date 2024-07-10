@@ -49,7 +49,9 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
             add-apt-repository ppa:ondrej/php
             apt update && apt upgrade
             apt install php7.4
+
         ```
+
 
     2.1. Adicione as extensões do PHP
         ```
@@ -68,6 +70,7 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
             apt install zip
             apt install curl
         ```
+
     2.2.  Ajuste os parâmetros em /etc/php/7.4/apache2/php.ini
         
         ```
@@ -254,6 +257,7 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
     ```
 
     7.4.  Reinicie o serviço Postgresql e execute os comandos para criação de usuários no Postgres
+
     ```
         systemctl restart postgresql
 
