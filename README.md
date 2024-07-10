@@ -58,6 +58,69 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
             cp composer.phar /usr/local/bin/composer
         ```
 
+4. Instale o Apache2
+ 
+    ```
+         apt install apache2
+    ```
+    4.1. Crie um arquivo em /etc/apache2/sites-available com o nome ecidade.conf e adicione o seguinte conteúdo:
+       ```
+       <VirtualHost *:80>
+                
+                 LimitRequestLine 16382
+                 LimitRequestFieldSize 16382
+                 Timeout 12000
+                 AddDefaultCharset ISO-8859-1
+                 SetEnv no-gzip 1
+                 <Directory /var/www>
+                     Options -Indexes +FollowSymLinks +MultiViews
+                     AllowOverride All
+                     Require all granted
+                 </Directory>
+         
+                 ServerAdmin webmaster@localhost
+                 DocumentRoot /var/www
+         
+                 ErrorLog /var/log/apache2/error.log
+                 CustomLog /var/log/apache2/access.log combined
+         
+        </VirtualHost>
+        
+        ```
+    4.2. execute os comandos:
+       ```
+           a2dissite 000-default
+           a2ensite ecidade
+
+           a2enmod rewrite
+        
+           chown -R www-data.www-data /var/www/tmp
+           chmod -R 777 /var/www/tmp
+
+           systemctl restart apache2
+
+       ```    
+
+5. Instale o PostgreSQL na versão 12.x
+    ```
+        
+        apt install postgresql-12 postgresql-client-12 postgresql-common
+
+    ```
+
+        5.1. Após instalado altere os parâmetros abaixo do arquivo /etc/postgresql/12/main/postgresql.conf:
+    
+    ```
+        listen_address '*'
+        include_if_exists = 'schemas_ecidade.conf'
+        max_connections = 20
+        bytea_output = 'escape'
+        max_locks_per_transaction = 256
+        escape_string_warning = off
+        standard_conforming_strings = off
+        sudo /etc/init.d/postgresql restart
+    ```
+
 
 4. Clone este repositório com o comando abaixo
     
@@ -67,9 +130,35 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
        
     ```
 
-5. Mova a pasta clonada do repositório para /var/www
+5. Mova a pasta clonada do repositório para /var/www e altere as permissões 
     ```
        mv /tmp/e-cidade  /var/www/
-
+       chown -R www-data:www-data /var/www/e-cidade
+       chmod -R 775 /var/www/e-cidade
+       chmod -R 777 /var/www/e-cidade/storage 
     ``
+    5.1.  Copie o arquivo schemas_ecidade.conf para /etc/postgresql/12/main/ 
+    
+    ```
+       cp /var/www/e-cidade/schemas_ecidade.conf /etc/postgresql/12/main
+    ``
+    5.2. Edite o arquivo /etc/postgresql/12/main/pg_hba.conf altere o parâmetro peer para trust 
 
+    5.3.  Reinicie o serviço Postgresql e execute os comandos para criação de usuários no Postgres
+    ```
+        systemctl restart postgresql
+
+        psql -U postgres -h localhost template1 -c "create role ecidade with superuser login password 'ecidade'"
+
+        psql -U postgres -h localhost template1 -c "create role dbportal with superuser login password 'dbportal'"
+
+        psql -U postgres -h localhost template1 -c "create role dbseller with login password bseller'"
+
+        psql -U postgres -h localhost template1 -c "create role plugin with login password 'plugin'"
+        
+        psql -U postgres -h localhost template1 -c "create role usersrole with login password 'usersrole'"
+        
+        createdb -U dbportal e-cidade
+
+    ```
+      
