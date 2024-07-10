@@ -6,6 +6,11 @@ A economia de recursos é somente uma das vantagens na adoção do e-cidade, al�
 
 Este repositório é um clone de  https://github.com/e-cidade/e-cidade. 
 
+> 
+> As configurações desta instalação é para fins de estudo - uma instalação única. Para múltiplas instalações entre em contato 
+> comigo pelo email wscomvix@gmail.com - WSCOM Consultoria Treinamento e Desenvolvimento - falar com Wanderlei Silva do Carmo (Wander)
+> 
+
 ## Requisitos Mínimos
 
 * Apache 2
@@ -130,21 +135,48 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
        
     ```
 
-5. Mova a pasta clonada do repositório para /var/www e altere as permissões 
+    4.1. Mova a pasta clonada do repositório para /var/www e altere as permissões 
     ```
        mv /tmp/e-cidade  /var/www/
        chown -R www-data:www-data /var/www/e-cidade
        chmod -R 775 /var/www/e-cidade
        chmod -R 777 /var/www/e-cidade/storage 
     ``
-    5.1.  Copie o arquivo schemas_ecidade.conf para /etc/postgresql/12/main/ 
+    4.2.  Copie o arquivo schemas_ecidade.conf para /etc/postgresql/12/main/ 
     
     ```
        cp /var/www/e-cidade/schemas_ecidade.conf /etc/postgresql/12/main
     ``
-    5.2. Edite o arquivo /etc/postgresql/12/main/pg_hba.conf altere o parâmetro peer para trust 
+    4.3. Edite o arquivo /etc/postgresql/12/main/pg_hba.conf altere o parâmetro peer para trust 
+    
+    ```
+        # DO NOT DISABLE!
+        # If you change this first entry you will need to make sure that the
+        # database superuser can access the database using some other method.
+        # Noninteractive access to all databases is required during automatic
+        # maintenance (custom daily cronjobs, replication, and similar tasks).
+        #
+        # Database administrative login by Unix domain socket
+        local   all             postgres                                trust
+        local   all             dbportal                                peer
 
-    5.3.  Reinicie o serviço Postgresql e execute os comandos para criação de usuários no Postgres
+        # TYPE  DATABASE        USER            ADDRESS                 METHOD
+
+        # "local" is for Unix domain socket connections only
+        local   all             all                                     trust
+        # IPv4 local connections:
+        host    all             all             127.0.0.1/32            trust
+        # IPv6 local connections:
+        host    all             all             ::1/128                 trust
+        # Allow replication connections from localhost, by a user with the
+        # replication privilege.
+        local   replication     all                                     trust
+        host    replication     all             127.0.0.1/32            trust
+        host    replication     all             ::1/128                 trust
+    
+    ```
+
+    4.4.  Reinicie o serviço Postgresql e execute os comandos para criação de usuários no Postgres
     ```
         systemctl restart postgresql
 
@@ -161,4 +193,3 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
         createdb -U dbportal e-cidade
 
     ```
-      
