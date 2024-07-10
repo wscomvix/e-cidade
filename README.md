@@ -101,7 +101,7 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
 
     ```
 
-3. Instale o composer (conforme recomendações do site)
+4. Instale o composer (conforme recomendações do site)
     - copie o script abaixo
         ```
             php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
@@ -112,12 +112,12 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
             cp composer.phar /usr/local/bin/composer
         ```
 
-4. Instale o Apache2
+5. Instale o Apache2
  
     ```
          apt install apache2
     ```
-    4.1. Crie um arquivo em /etc/apache2/sites-available com o nome ecidade.conf e adicione o seguinte conteúdo:
+    5.1. Crie um arquivo em /etc/apache2/sites-available com o nome ecidade.conf e adicione o seguinte conteúdo:
        ```
        <VirtualHost *:80>
                 
@@ -141,7 +141,7 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
         </VirtualHost>
         
         ```
-    4.2. execute os comandos:
+    5.2. execute os comandos:
        ```
            a2dissite 000-default
            a2ensite ecidade
@@ -155,7 +155,7 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
 
        ```    
 
-5. Instale o PostgreSQL na versão 12.x
+6. Instale o PostgreSQL na versão 12.x
     ```
         
         apt install postgresql-12 postgresql-client-12 postgresql-common
@@ -166,7 +166,7 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
         
     ```
 
-        5.1. Após instalado altere os parâmetros abaixo do arquivo /etc/postgresql/12/main/postgresql.conf:
+        6.1. Após instalado altere os parâmetros abaixo do arquivo /etc/postgresql/12/main/postgresql.conf:
     
     ```
         listen_address '*'
@@ -180,7 +180,7 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
     ```
 
 
-4. Clone este repositório com o comando abaixo
+7. Clone este repositório com o comando abaixo
     
     ```
        cd /tmp
@@ -188,7 +188,7 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
        
     ```
 
-    4.1. Mova a pasta clonada do repositório para /var/www e altere as permissões 
+    7.1. Mova a pasta clonada do repositório para /var/www e altere as permissões 
     ```
        mv /tmp/e-cidade  /var/www/
        
@@ -219,12 +219,12 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
 
 
     ``
-    4.2.  Copie o arquivo schemas_ecidade.conf para /etc/postgresql/12/main/ 
+    7.2.  Copie o arquivo schemas_ecidade.conf para /etc/postgresql/12/main/ 
     
     ```
        cp /var/www/e-cidade/schemas_ecidade.conf /etc/postgresql/12/main
     ``
-    4.3. Edite o arquivo /etc/postgresql/12/main/pg_hba.conf altere o parâmetro peer para trust 
+    7.3. Edite o arquivo /etc/postgresql/12/main/pg_hba.conf altere o parâmetro peer para trust 
     
     ```
         # DO NOT DISABLE!
@@ -253,7 +253,7 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
     
     ```
 
-    4.4.  Reinicie o serviço Postgresql e execute os comandos para criação de usuários no Postgres
+    7.4.  Reinicie o serviço Postgresql e execute os comandos para criação de usuários no Postgres
     ```
         systemctl restart postgresql
 
@@ -271,7 +271,7 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
 
     ```
 
-    4.5. Clone a base de dados do e-cidade
+    7.5. Clone a base de dados do e-cidade
 
     ```
         
@@ -289,7 +289,7 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
 
     ```
 
-5.0.  Ajuste o plugin  Desktop 3.0 para o usuário
+8.0.  Ajuste o plugin  Desktop 3.0 para o usuário
 
 ```
     cd /var/www/
@@ -312,10 +312,10 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
 
 ```
 
-5.1. Abra a URL no navegador de Edge ou Firefox  (testado e validado por esta instalação)
+8.1. Abra a URL no navegador de Edge ou Firefox  (testado e validado por esta instalação)
     http://localhost/e-cidade   (substitua 'localhost' pelo ip de seu VPS ou de sua máquina virtual)
 
-5.2. Comunique se houver algum problema na instalação
+8.2. Comunique se houver algum problema na instalação
 
     # contato: 
     >
