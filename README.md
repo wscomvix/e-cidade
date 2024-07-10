@@ -27,6 +27,22 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
         apt upgrade
 
     ```
+
+    1.1 Ajuste locales
+             
+        ```
+            sudo localedef -i pt_BR -c -f ISO-8859-1 -A /usr/share/locale/locale.alias pt_BR
+            sudo locale-gen pt_BR
+            sudo dpkg-reconfigure locales
+
+            - escolha  pt_BR, pt_BR.ISO-8859-1, pt_BR-UTF-8
+
+            export LC_ALL=pt_BR
+            sudo echo LC_ALL=pt_BR >> /etc/environment   
+
+        ```
+
+
 2. Instale o php7.4
     - Adicione o repositório para baixar a versão 7.4 do PHP
         ```
@@ -35,7 +51,7 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
             apt install php7.4
         ```
 
-    - Adicione as extensões do PHP
+    2.1. Adicione as extensões do PHP
         ```
             apt install php7.4-cli
             apt install php7.4-mbstring
@@ -52,6 +68,39 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
             apt install zip
             apt install curl
         ```
+    2.2.  Ajuste os parâmetros em /etc/php/7.4/apache2/php.ini
+        
+        ```
+            sudo vim /etc/php/7.4/apache2/php.ini
+ 
+            short_open_tag = On
+            register_argc_argv = on
+            post_max_size = 64M
+            upload_max_filesize = 64M
+            default_socket_timeout = 60000
+            max_execution_time = 60000
+            max_input_time = 60000
+            memory_limit = 512M
+            allow_call_time_pass_reference = on
+            error_reporting = E_ALL & ~E_NOTICE
+            display_errors = off
+            log_errors = on
+            error_log = /var/www/log/php-scripts.log
+            session.gc_maxlifetime = 7200
+
+        ```
+
+3. Instale o Libreoffice
+
+    ```
+        sudo apt-get install libreoffice-writer python3-uno openjdk-17-jre-headless
+        systemctl status rc-local
+        sudo systemctl enable rc-local
+        sudo systemctl start rc-local.service
+        sudo systemctl status rc-local
+
+    ```
+
 3. Instale o composer (conforme recomendações do site)
     - copie o script abaixo
         ```
@@ -111,6 +160,10 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
         
         apt install postgresql-12 postgresql-client-12 postgresql-common
 
+        pg_dropcluster --stop 12 main
+
+        pg_createcluster -e LATIN1 12 main
+        
     ```
 
         5.1. Após instalado altere os parâmetros abaixo do arquivo /etc/postgresql/12/main/postgresql.conf:
@@ -138,9 +191,33 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
     4.1. Mova a pasta clonada do repositório para /var/www e altere as permissões 
     ```
        mv /tmp/e-cidade  /var/www/
+       
+       cd /var/www/e-cidade
+
+       cp .env.example .env  
+       
        chown -R www-data:www-data /var/www/e-cidade
        chmod -R 775 /var/www/e-cidade
        chmod -R 777 /var/www/e-cidade/storage 
+
+      # remova o diretorios vendor e o arquivo composer.lock
+      rm -fr  /var/www/e-cidade/vendor
+      rm -fr  /var/www/e-cidade/composer.lock
+
+      #execute o composer install ou  composer update
+      cd /var/www/e-cidade
+
+      # confirme com enter o comando...
+      composer update 
+
+      # limpe os caches da aplicação
+      php artisan clear
+      php artisan cache:clear
+
+      # Gere a chave
+      php artisan key:generate
+
+
     ``
     4.2.  Copie o arquivo schemas_ecidade.conf para /etc/postgresql/12/main/ 
     
@@ -193,3 +270,55 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
         createdb -U dbportal e-cidade
 
     ```
+
+    4.5. Clone a base de dados do e-cidade
+
+    ```
+        
+        cd /tmp
+
+        git clone https://github.com/e-cidade/base-dados-ecidade.git
+
+        entre na pasta...
+
+        cd /tmp/base-dados-ecidade
+
+        bzcat dump_ecidade-zerada.sql.bz2|psql -U dbportal -d e-cidade
+
+        aguarde o final do restore...
+
+    ```
+
+5.0.  Ajuste o plugin  Desktop 3.0 para o usuário
+
+```
+    cd /var/www/
+    chmod -R 775 /var/www/e-cidade/*
+    chmod -R 777 /var/www/e-cidade/tmp/
+    chmod -R 777 /var/www/e-cidade/storage/
+    
+    cd /var/www/e-cidade/
+    cd /var/www/e-cidade/config/
+    cp preferencias.json.dist preferencias.json
+    cd /var/www/e-cidade/extension/data/extension/
+    
+    cp Desktop.data.dist Desktop.data  
+    
+    cd /var/www/e-cidade/extension/modification/data/modification/
+    
+    cp dbportal-v3-desktop.data.dist dbportal-v3-desktop.data
+
+    /var/www/e-cidade/bin/v3/extension/install Desktop treinamento
+
+```
+
+5.1. Abra a URL no navegador de Edge ou Firefox  (testado e validado por esta instalação)
+    http://localhost/e-cidade   (substitua 'localhost' pelo ip de seu VPS ou de sua máquina virtual)
+
+5.2. Comunique se houver algum problema na instalação
+
+    # contato: 
+    >
+    > E-mail: wscomvix@gmail.com  Assunto: instalação do e-cidade
+    > Contato: WSCOMVIX - Wander
+    >
