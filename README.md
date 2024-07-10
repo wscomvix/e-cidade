@@ -287,6 +287,11 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
 
         aguarde o final do restore...
 
+        Altere a senha do usuário dbseller para o hash que corresponde a senha padrão 123Teste - provisoriamente 
+        A partir deste acesso você poderá criar outros usuários e alterar a senha - ***(recomendável)***
+
+        psql -U postgres -d "e-cidade" -c "update db_usuarios set senha='dced8de21d76cb886a0d410732f9d78094b2e4ae' where     login='dbseller';"
+
     ```
 
 8.0.  Ajuste o plugin  Desktop 3.0 para o usuário
@@ -299,16 +304,24 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
     
     cd /var/www/e-cidade/
     cd /var/www/e-cidade/config/
-    cp preferencias.json.dist preferencias.json
+    
+    cp -p preferencias.json.dist preferencias.json
     cd /var/www/e-cidade/extension/data/extension/
     
-    cp Desktop.data.dist Desktop.data  
+    cp -p Desktop.data.dist Desktop.data  
     
     cd /var/www/e-cidade/extension/modification/data/modification/
     
-    cp dbportal-v3-desktop.data.dist dbportal-v3-desktop.data
+    cp -p dbportal-v3-desktop.data.dist dbportal-v3-desktop.data
 
-    /var/www/e-cidade/bin/v3/extension/install Desktop treinamento
+    # Configurando o Desktop 3.0 para o usuário dbseller - ou qualquer outro.. 
+    /var/www/e-cidade/bin/v3/extension/install Desktop dbseller
+
+    # Dica: os arquivos Desktop.data e o dbportal-v3-desktop.data deve refletir o caminho correto da base da configuração.
+    -- edite os arquivos e veja se está apontando para /var/www/e-cidade -- esta linha fica próxima ao final do arquivo.
+
+    #Ajuste novamente as permissões
+    chown -R www-data:www-data  /var/www/e-cidade
 
 ```
 
