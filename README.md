@@ -1,15 +1,19 @@
-## e-Cidade
+# Instalação do e-Cidade
+
+## O que é o e-Cidade ?
 
 O e-Cidade destina-se a informatizar a gestão dos Municípios Brasileiros de forma integrada. Esta informatização contempla a integração entre os entes municipais: Prefeitura Municipal, Câmara Municipal, Autarquias, Fundações e outros.
 
 A economia de recursos é somente uma das vantagens na adoção do e-cidade, além da liberdade de escolha dos fornecedores e garantia de continuidade do sistema, uma vez apoiado pelo Ministério do Planejamento.
 
-Este repositório é um clone de  https://github.com/e-cidade/e-cidade. 
+Este repositório é um clone de  https://github.com/e-cidade/e-cidade disponibilizado pela empresa Contass. 
 
 > 
-> As configurações desta instalação é para fins de estudo - uma instalação única. Para múltiplas instalações entre em contato 
-> comigo pelo email wscomvix@gmail.com - WSCOM Consultoria Treinamento e Desenvolvimento - falar com Wanderlei Silva do Carmo (Wander)
-> 
+> As configurações desta instalação é para fins de estudo - uma instalação única. Para múltiplas instalações entre em contato comigo
+> WSCOM Consultoria Treinamento e Desenvolvimento - falar com Wanderlei Silva do Carmo (Wander)
+> E-mail: wscomvix@gmail.com
+> Site: https://wscom.dev.br
+>
 
 ## Requisitos Mínimos
 
@@ -18,57 +22,94 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
 * PHP 7.4.x 
 * PostgreSQL 12.19.x 
 * Ubuntu Linux 20.04.x ou superior
-
+* Para editar os arquivos utilize o editor nano ou vim (vi)
+* Os comando deve ser executados como superusuário. Para isso execute o sudo antes de digitar os comandos ou simplesmente digite o comando sudu su, entre com sua senha de administrador. Assim, não mais necessário utilzar o sudo
+* Se entrar na VPS ou na máquina virtual local como "root" também não é necessário digitar o comando "sudo" antes dos comandos.
 
 ## Instalação
 1. Atualize o sistema operacional - utilizamos como referência o Ubuntu 20.04 codenome - Focal
     ```
+        #Atualize a lista de pacotes do Ubuntu
         apt update
-        apt upgrade
 
+        #Instale o editor Vi
+        apt install vim-nox
+
+        #Faça upgrade do sistema operacional
+        apt upgrade
+       
     ```
 
     1.1 Ajuste locales
              
         ```
-            sudo localedef -i pt_BR -c -f ISO-8859-1 -A /usr/share/locale/locale.alias pt_BR
+
+            sudo localedef -i pt_BR -c -f ISO-8859-1 -A /usr/share/locale/locale.
+
+            alias pt_BR
+
             sudo locale-gen pt_BR
+
             sudo dpkg-reconfigure locales
+
 
             - escolha  pt_BR, pt_BR.ISO-8859-1, pt_BR-UTF-8
 
             export LC_ALL=pt_BR
+
             sudo echo LC_ALL=pt_BR >> /etc/environment   
+
 
         ```
 
 
 2. Instale o php7.4
+
     - Adicione o repositório para baixar a versão 7.4 do PHP
+
         ```
-            add-apt-repository ppa:ondrej/php
-            apt update && apt upgrade
-            apt install php7.4
+    
+            1. add-apt-repository ppa:ondrej/php
+
+            2. apt update && apt upgrade
+
+            3. apt install php7.4
 
         ```
 
 
     2.1. Adicione as extensões do PHP
+
         ```
-            apt install php7.4-cli
-            apt install php7.4-mbstring
-            apt install php7.4-curl
-            apt install php7.4-gd
-            apt install php7.4-pgsql
-            apt install php7.4-bcmath
-            apt install php7.4-xml
-            apt install php7.4-soap
-            apt install php7.4-zip
-            apt install php7.4-imagick
-            apt install libcurl4
-            apt install libapache2-mod-php7.4
-            apt install zip
-            apt install curl
+    
+            1. apt install php7.4-cli
+
+            2. apt install php7.4-mbstring
+
+            3. apt install php7.4-curl
+
+            4. apt install php7.4-gd
+
+            5. apt install php7.4-pgsql
+
+            6. apt install php7.4-bcmath
+
+            7. apt install php7.4-xml
+
+            8. apt install php7.4-soap
+
+            9. apt install php7.4-zip
+
+            10. apt install php7.4-imagick
+
+            11. apt install libcurl4
+
+            12. apt install libapache2-mod-php7.4
+
+            13. apt install zip
+
+            14. apt install curl
+
         ```
 
     2.2.  Ajuste os parâmetros em /etc/php/7.4/apache2/php.ini
@@ -105,22 +146,39 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
     ```
 
 4. Instale o composer (conforme recomendações do site)
-    - copie o script abaixo
+   - copie o script abaixo:
+
         ```
             php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+
             php -r "if (hash_file('sha384', 'composer-setup.php') === 'dac665fdc30fdd8ec78b38b9800061b4150413ff2e3b6f88543c636f7cd84f6db9189d43a81e5503cda447da73c7e5b6') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
             php composer-setup.php
+
             php -r "unlink('composer-setup.php');"
 
             cp composer.phar /usr/local/bin/composer
+
         ```
 
 5. Instale o Apache2
  
     ```
          apt install apache2
+
+         #crie os diretórios "log" e "tmp" em /var/www
+         1. mkdir /var/www/log
+
+         2. mkdir /var/www/tmp
+
+
     ```
-    5.1. Crie um arquivo em /etc/apache2/sites-available com o nome ecidade.conf e adicione o seguinte conteúdo:
+
+    5.1. Crie o /etc/apache2/sites-available/ecidade.conf:
+    
+        1. vi /etc/apache2/sites-available/ecidade.conf 
+
+        2. Adicione o seguinte conteúdo nele:
+
        ```
        <VirtualHost *:80>
                 
@@ -145,6 +203,7 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
         
         ```
     5.2. execute os comandos:
+
        ```
            a2dissite 000-default
            a2ensite ecidade
@@ -159,6 +218,7 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
        ```    
 
 6. Instale o PostgreSQL na versão 12.x
+
     ```
         
         apt install postgresql-12 postgresql-client-12 postgresql-common
@@ -169,64 +229,87 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
         
     ```
 
-        6.1. Após instalado altere os parâmetros abaixo do arquivo /etc/postgresql/12/main/postgresql.conf:
+    6.1. Após instalado altere os parâmetros abaixo do arquivo /etc/postgresql/12/main/postgresql.conf:
+
+        1. vi /etc/postgresql/12/main/postgresql.conf
     
-    ```
-        listen_address '*'
-        include_if_exists = 'schemas_ecidade.conf'
-        max_connections = 20
-        bytea_output = 'escape'
-        max_locks_per_transaction = 256
-        escape_string_warning = off
-        standard_conforming_strings = off
-        sudo /etc/init.d/postgresql restart
-    ```
+
+        ```
+
+            listen_address '*'
+            include_if_exists = 'schemas_ecidade.conf'
+            max_connections = 20
+            bytea_output = 'escape'
+            max_locks_per_transaction = 256
+            escape_string_warning = off
+            standard_conforming_strings = off
+            sudo /etc/init.d/postgresql restart
+
+     
+        ```
+    6.2. Habilite o módulo php7.4 no apache2.
+        
+        1. a2enmod php7.4  (se houver alguma versão anterior do módulo, desabilite-a com o comando a2dismod phpX, por exemplo, onde o "X" representa o número da versão do módulo.)
+        
+        > 
+        > se for exibido o erro de versão do PHP no navegador quando abrir o sistema pela primeira vez, pode ser devido ao módulo do apache2 na versão incorreta.
+        >
+        
 
 
 7. Clone este repositório com o comando abaixo
     
+   
+
+    7.1. Mova a pasta clonada do repositório para /var/www e altere as permissões:
+
     ```
-       cd /tmp
-       git clone https://github.com/wscomvix/e-cidade.git
+    
+        1. cd /tmp
+
+        2. git clone https://github.com/wscomvix/e-cidade.git
        
+    
+        3. mv /tmp/e-cidade  /var/www/
+        
+        4. cd /var/www/e-cidade
+
+        5. cp .env.example .env  
+        
+        6. chown -R www-data:www-data /var/www/e-cidade
+
+        7. chmod -R 775 /var/www/e-cidade
+
+        8. chmod -R 777 /var/www/e-cidade/storage 
+
+        # remova o diretorios vendor e o arquivo composer.lock
+        9. rm -fr  /var/www/e-cidade/vendor
+
+        10. rm -fr  /var/www/e-cidade/composer.lock
+
+        #execute o composer install ou  composer update
+        11. cd /var/www/e-cidade
+
+        # confirme com enter o comando...
+        12. composer update 
+
+        # limpe os caches da aplicação
+        13. php artisan clear
+
+        14. php artisan cache:clear
+
+        # Gere a chave
+        15. php artisan key:generate
+    
     ```
 
-    7.1. Mova a pasta clonada do repositório para /var/www e altere as permissões 
-    ```
-       mv /tmp/e-cidade  /var/www/
-       
-       cd /var/www/e-cidade
-
-       cp .env.example .env  
-       
-       chown -R www-data:www-data /var/www/e-cidade
-       chmod -R 775 /var/www/e-cidade
-       chmod -R 777 /var/www/e-cidade/storage 
-
-      # remova o diretorios vendor e o arquivo composer.lock
-      rm -fr  /var/www/e-cidade/vendor
-      rm -fr  /var/www/e-cidade/composer.lock
-
-      #execute o composer install ou  composer update
-      cd /var/www/e-cidade
-
-      # confirme com enter o comando...
-      composer update 
-
-      # limpe os caches da aplicação
-      php artisan clear
-      php artisan cache:clear
-
-      # Gere a chave
-      php artisan key:generate
-
-
-    ``
     7.2.  Copie o arquivo schemas_ecidade.conf para /etc/postgresql/12/main/ 
     
     ```
        cp /var/www/e-cidade/schemas_ecidade.conf /etc/postgresql/12/main
-    ``
+
+    ```
+
     7.3. Edite o arquivo /etc/postgresql/12/main/pg_hba.conf altere o parâmetro peer para trust 
     
     ```
@@ -259,19 +342,19 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
     7.4.  Reinicie o serviço Postgresql e execute os comandos para criação de usuários no Postgres
 
     ```
-        systemctl restart postgresql
+        1. systemctl restart postgresql
 
-        psql -U postgres -h localhost template1 -c "create role ecidade with superuser login password 'ecidade'"
+        2. psql -U postgres -h localhost template1 -c "create role ecidade with superuser login password 'ecidade'"
 
-        psql -U postgres -h localhost template1 -c "create role dbportal with superuser login password 'dbportal'"
+        3. psql -U postgres -h localhost template1 -c "create role dbportal with superuser login password 'dbportal'"
 
-        psql -U postgres -h localhost template1 -c "create role dbseller with login password bseller'"
+        4. psql -U postgres -h localhost template1 -c "create role dbseller with login password bseller'"
 
-        psql -U postgres -h localhost template1 -c "create role plugin with login password 'plugin'"
+        5. psql -U postgres -h localhost template1 -c "create role plugin with login password 'plugin'"
         
-        psql -U postgres -h localhost template1 -c "create role usersrole with login password 'usersrole'"
+        6. psql -U postgres -h localhost template1 -c "create role usersrole with login password 'usersrole'"
         
-        createdb -U dbportal e-cidade
+        7. createdb -U dbportal e-cidade
 
     ```
 
@@ -279,58 +362,67 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
 
     ```
         
-        cd /tmp
+        # Altere o diretório para o /tmp do sistema operacional
+        1. cd /tmp
 
-        git clone https://github.com/e-cidade/base-dados-ecidade.git
+        # Clonar o repositório
+        2. git clone https://github.com/e-cidade/base-dados-ecidade.git
 
-        entre na pasta...
+        #entre na pasta...
+        3. cd /tmp/base-dados-ecidade
 
-        cd /tmp/base-dados-ecidade
+        4. bzcat dump_ecidade-zerada.sql.bz2|psql -U dbportal -d e-cidade
 
-        bzcat dump_ecidade-zerada.sql.bz2|psql -U dbportal -d e-cidade
+        # aguarde o final do restore...
+        5. Altere a senha do usuário dbseller para o hash que corresponde a senha padrão 123Teste - provisoriamente 
 
-        aguarde o final do restore...
+        6. A partir deste acesso você poderá criar outros usuários e alterar a senha - ***(recomendável)***
 
-        Altere a senha do usuário dbseller para o hash que corresponde a senha padrão 123Teste - provisoriamente 
-        A partir deste acesso você poderá criar outros usuários e alterar a senha - ***(recomendável)***
-
-        psql -U postgres -d "e-cidade" -c "update db_usuarios set senha='dced8de21d76cb886a0d410732f9d78094b2e4ae' where     login='dbseller';"
+        7. psql -U postgres -d "e-cidade" -c "update db_usuarios set senha='dced8de21d76cb886a0d410732f9d78094b2e4ae' where login='dbseller';"
 
     ```
 
 8.0.  Ajuste o plugin  Desktop 3.0 para o usuário
 
 ```
-    cd /var/www/
-    chmod -R 775 /var/www/e-cidade/*
-    chmod -R 777 /var/www/e-cidade/tmp/
-    chmod -R 777 /var/www/e-cidade/storage/
+    # Altere o diretório para o diretório raiz do apache2
+    1. cd /var/www/
+
+    # Ajuste as permissões 
+    2. chmod -R 775 /var/www/e-cidade/*
     
-    cd /var/www/e-cidade/
-    cd /var/www/e-cidade/config/
+    3. chmod -R 777 /var/www/e-cidade/tmp/
+
+    4. chmod -R 777 /var/www/e-cidade/storage/
     
-    cp -p preferencias.json.dist preferencias.json
-    cd /var/www/e-cidade/extension/data/extension/
+    5. cd /var/www/e-cidade/
+
+    6. cd /var/www/e-cidade/config/
     
-    cp -p Desktop.data.dist Desktop.data  
+    7. cp -p preferencias.json.dist preferencias.json
+
+    8. cd /var/www/e-cidade/extension/data/extension/
     
-    cd /var/www/e-cidade/extension/modification/data/modification/
+    9. cp -p Desktop.data.dist Desktop.data  
     
-    cp -p dbportal-v3-desktop.data.dist dbportal-v3-desktop.data
+    10. cd /var/www/e-cidade/extension/modification/data/modification/
+    
+    11. cp -p dbportal-v3-desktop.data.dist dbportal-v3-desktop.data
 
     # Configurando o Desktop 3.0 para o usuário dbseller - ou qualquer outro.. 
-    /var/www/e-cidade/bin/v3/extension/install Desktop dbseller
+    12. /var/www/e-cidade/bin/v3/extension/install Desktop dbseller
 
-    # Dica: os arquivos Desktop.data e o dbportal-v3-desktop.data deve refletir o caminho correto da base da configuração.
+    # Dica: os arquivos Desktop.data e o dbportal-v3-desktop.data deve refletir o 13. caminho correto da base da configuração.
     -- edite os arquivos e veja se está apontando para /var/www/e-cidade -- esta linha fica próxima ao final do arquivo.
 
     #Ajuste novamente as permissões
-    chown -R www-data:www-data  /var/www/e-cidade
+    14. chown -R www-data:www-data  /var/www/e-cidade
 
 ```
 
 8.1. Abra a URL no navegador de Edge ou Firefox  (testado e validado por esta instalação)
     http://localhost/e-cidade   (substitua 'localhost' pelo ip de seu VPS ou de sua máquina virtual)
+
 
 8.2. Comunique se houver algum problema na instalação
 
@@ -339,3 +431,4 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade.
     > E-mail: wscomvix@gmail.com  Assunto: instalação do e-cidade
     > Contato: WSCOMVIX - Wander
     >
+
