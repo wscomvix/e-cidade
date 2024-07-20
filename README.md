@@ -274,7 +274,7 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade disponibi
         
         4. cd /var/www/e-cidade
 
-        5. cp .env.example .env  
+        5. cp .env.example .env  (após a instalação ajuste os parâmetros nome de usuário e senha do banco, entre outros, se for diferente do padrão)
         
         6. chown -R www-data:www-data /var/www/e-cidade
 
@@ -293,9 +293,10 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade disponibi
         # confirme com enter o comando...
         12. composer update 
 
-        # limpe os caches da aplicação
+        # limpe as configurações em cache da aplicação
         13. php artisan clear
 
+        # Limpar o cache do laravel
         14. php artisan cache:clear
 
         # Gere a chave
@@ -311,6 +312,8 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade disponibi
     ```
 
     7.3. Edite o arquivo /etc/postgresql/12/main/pg_hba.conf altere o parâmetro peer para trust 
+
+    1. vi /etc/postgresql/12/main/pg_hba.conf
     
     ```
         # DO NOT DISABLE!
