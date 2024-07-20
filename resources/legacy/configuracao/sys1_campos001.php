@@ -79,14 +79,20 @@ if(isset($HTTP_POST_VARS["incluir"])) {
     $tamanho = 0;
   }
 
+
   if(isset($vnulo)) $nulo = 't';
   else $nulo = 'f';
   if(isset($vmaiusculo)) $maiusculo = 't';
   else $maiusculo = 'f';
   if(isset($vautocompl)) $autocompl = 't';
   else $autocompl = 'f';
-  $result = pg_exec("select nextval('db_syscampo_codcam_seq')");
-  $codcam = pg_result($result,0,0);
+  $result = pg_exec("select nextval('db_syscampo_codcam_seq') + 1110");
+
+
+  $codcam = pg_result($result,0,0) ;
+  
+  
+
   if((substr($conteudo,0,4)=="date") && empty($valorinicial)){
     $valorinicial = "null";
   }
@@ -100,16 +106,26 @@ if(isset($HTTP_POST_VARS["incluir"])) {
     $valorinicial = "f";
   }
 
-  $result = pg_query("select nomecam from db_syscampo where nomecam ='$nomecam'");
+  //die($codcam);
+
+  $qry = "select nomecam from db_syscampo where nomecam ='$nomecam'";
+
+  $result = pg_query($qry);
   $numrows = @pg_num_rows($result);
   if($numrows>0){
     $processamento = "4";
     $erro_msg      = "Inclusão abortada! \\n O campo $nomecam já foi incluido!";
   }else{
-      pg_exec("BEGIN");
-      pg_exec("insert into db_syscampo
-	       values($codcam,'$nomecam','$conteudo','$descricao','$valorinicial',
-			      '$rotulo',$tamanho,'$nulo','$maiusculo','$autocompl',$aceitatipo,'$tipoobj','$rotulorel')") or die("Erro(43) inserindo em db_syscampo");
+	  pg_exec("BEGIN");
+
+	  $qry = "insert into db_syscampo
+               values($codcam,'$nomecam','$conteudo','$descricao','$valorinicial',
+		       '$rotulo',$tamanho,'$nulo','$maiusculo','$autocompl',$aceitatipo,'$tipoobj','$rotulorel')";
+
+	  //die($qry);
+
+      pg_exec("$qry") or die("Erro(43) inserindo em db_syscampo");
+      
       if($codcampai!=0){
 	 pg_exec("insert into db_syscampodep
 		  values($codcam,'$codcampai')") or die("Erro(43) inserindo em db_syscampodep");

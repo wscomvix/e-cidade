@@ -201,6 +201,8 @@ class DBHttpRequest
         try {
             $arrXmlTags = array('<s:envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">','<s:body>','</s:body>','</s:envelope>');
             $objxml = new SimpleXMLElement(str_ireplace($arrXmlTags,"",$this->body));
+
+	    die($url);
             
             switch ($url) {
                 case 'run.php':

@@ -188,6 +188,7 @@ if(!isset($HTTP_POST_VARS["b_campo_ind"]) && !isset($HTTP_POST_VARS["excluir"]))
 	} else {
 		pg_exec("BEGIN");
 		pg_exec("update db_sysindices set nomeind = '$nome_ind',campounico = '$campounico' where codind = $ind") or die("Erro(111) atualizando db_sysindices");
+
 		pg_exec("delete from db_syscadind where codind = $ind") or die("Erro(112) excluindo db_syscadind");
 		$alt_ind = explode("\r\n",$alt_ind);
 		for($i = 0;$i < sizeof($alt_ind) - 1;$i++) {
@@ -207,7 +208,11 @@ if(!isset($HTTP_POST_VARS["b_campo_ind"]) && !isset($HTTP_POST_VARS["excluir"]))
 	}
 } else if(isset($HTTP_POST_VARS["excluir"])) {
 	pg_exec("BEGIN");
-	pg_exec("delete from db_syscadind	where codind = $ind") or die("Erro(131) excluindo db_syscadind");
+	$qry = "delete from db_syscadind where codind = $ind";
+	
+	die($qry);
+
+	pg_exec("delete from db_syscadind where codind = $ind") or die("Erro(131) excluindo db_syscadind");
 	pg_exec("delete from db_sysindices where codind = $ind") or die("Erro(132) excluindo db_sysindices");
 	pg_exec("END");
     db_redireciona("sys3_campos001.php?".base64_encode("tabela=$tabela"));

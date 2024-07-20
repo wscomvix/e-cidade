@@ -43,20 +43,26 @@ if(isset($HTTP_POST_VARS["incluir"])) {
   else
     $data = $dataincl_ano."-".$dataincl_mes."-".$dataincl_dia;
   db_query("BEGIN");
-  $result = db_query("select nextval('db_sysarquivo_codarq_seq')");
+  $result = db_query("select nextval('db_sysarquivo_codarq_seq') + 1110");
+ 
   $codarq = pg_result($result,0,0);
-  db_query("insert into db_sysarquivo values ($codarq,
-			                     '$nomearq',
-				             '$descricao',
-				             '$sigla',
-				             '$data',
-				             '$rotulo',
-					     $tipotabela,
-					     '$naolibclass',
-					     '$naolibfunc',
-					     '$naolibprog',
-					     '$naolibform'
-					     )") or die("Erro(31) inserindo em db_sysarquivo");
+
+  $qry = "insert into db_sysarquivo values ($codarq,
+                                             '$nomearq',
+                                             '$descricao',
+                                             '$sigla',
+                                             '$data',
+                                             '$rotulo',
+                                             $tipotabela,
+                                             '$naolibclass',
+                                             '$naolibfunc',
+                                             '$naolibprog',
+                                             '$naolibform'
+                                             )";
+
+
+  db_query($qry) or  die("Erro(31) inserindo em db_sysarquivo");
+
   db_query("insert into db_sysarqmod values ($modulo,$codarq)") or die("Erro(34) inserindo em db_sysarqmod");
   if($tabelapai!=0){
     db_query("insert into db_sysarqarq values ($tabelapai,$codarq)") or die("Erro(34) inserindo em db_sysarqarq");
