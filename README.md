@@ -120,8 +120,7 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade disponibi
             default_socket_timeout = 60000
             max_execution_time = 60000
             max_input_time = 60000
-            memory_limit = 512M
-            allow_call_time_pass_reference = on
+            memory_limit = 512M            
             error_reporting = E_ALL & ~E_NOTICE
             display_errors = off
             log_errors = on
