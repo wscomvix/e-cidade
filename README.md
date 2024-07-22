@@ -44,20 +44,16 @@ Este repositório é um clone de  https://github.com/e-cidade/e-cidade disponibi
              
         ```
 
-            sudo localedef -i pt_BR -c -f ISO-8859-1 -A /usr/share/locale/locale.
+            1. localedef -i pt_BR -c -f ISO-8859-1 -A /usr/share/locale/locale.alias pt_BR
 
-            alias pt_BR
+            2. locale-gen pt_BR
 
-            sudo locale-gen pt_BR
+            3. dpkg-reconfigure locales
 
-            sudo dpkg-reconfigure locales
+            # Escolha  pt_BR, pt_BR.ISO-8859-1, pt_BR-UTF-8
+            4. export LC_ALL=pt_BR
 
-
-            - escolha  pt_BR, pt_BR.ISO-8859-1, pt_BR-UTF-8
-
-            export LC_ALL=pt_BR
-
-            sudo echo LC_ALL=pt_BR >> /etc/environment   
+            5. echo LC_ALL=pt_BR >> /etc/environment   
 
 
         ```
